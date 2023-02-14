@@ -15,13 +15,12 @@
     </button>
     <script>
         window.addEventListener('load', function() {
-            console.log("koushik")
             var codeGenMetadata = {
                 // todo: put form id here
                 formPropertyId: 4,
                 formSelector: '[id*="name-form"]',
                 subjectIdentifiers: [{"name":"First name:","selector":"[name = \"fname\"]","isPrimary":true},{"name":"Last name:","selector":"[name = \"lname\"]","isPrimary":false}],
-                consentIdentifiers: [{"type":"NoUIElement","name":"DefaultElementId","selector":"DefaultElementSelector","propertyId":747,"consentValue":"DefaultConsentValue"}],
+                consentIdentifiers: [{"type":"NoUIElement","name":"DefaultElementId","selector":"DefaultElementSelector","propertyId":748,"consentValue":"DefaultConsentValue"}],
                 consentTrigger: {
                     action: 'submit',
                     selector: ''
@@ -136,7 +135,6 @@
             }
 
             function postConsentedItems(consentedItem) {
-                console.log("api called called")
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'https://dev.securiti.xyz/privaci/v1/consent/form/singleupload', false);
                 xhr.setRequestHeader('Content-type', 'application/json');
@@ -163,14 +161,12 @@
 
             var uploadConsent = function () {
                 var payload = prepareConsentPayload(form)
-                console.log("payload"+ payload)
                 if(payload) {
                     return postConsentedItems(payload);
                 }
             }
 
             form.addEventListener('submit', function () {
-                console.log("submit called")
                 uploadConsent()
             })
 
