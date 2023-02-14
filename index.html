@@ -136,6 +136,7 @@
             }
 
             function postConsentedItems(consentedItem) {
+                console.log("api called called")
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'https://dev.securiti.xyz/privaci/v1/consent/form/singleupload', false);
                 xhr.setRequestHeader('Content-type', 'application/json');
@@ -162,6 +163,7 @@
 
             var uploadConsent = function () {
                 var payload = prepareConsentPayload(form)
+                console.log("payload"+ payload)
                 if(payload) {
                     return postConsentedItems(payload);
                 }
