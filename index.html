@@ -17,6 +17,19 @@
         Submit Response
     </button>
     <script>
+        
+<!-- After adding this script, call setConsentBannerParams({uuid: <unique id> }) to set unique ID for a customer.  -->
+        (function () {
+        	var s = document.createElement('script');
+        	s.src = 'https://cdn-dev.securiti.xyz/consent/cookie-consent-sdk-loader.js';
+        	s.setAttribute('data-tenant-uuid', '08f53f36-7342-461a-8451-cc63e5f7c1f6');
+        	s.setAttribute('data-domain-uuid', '355f546e-bd85-46f1-937e-f7f938f4ea6d');
+        	s.setAttribute('data-backend-url', 'https://dev.securiti.xyz');
+        	s.setAttribute('data-skip-css', 'false');
+        	s.defer = true;
+        	var parent_node = document.head || document.body;
+        	parent_node.appendChild(s);
+        })()
         window.addEventListener('load', function() {
             var codeGenMetadata = {
                 // todo: put form id here
