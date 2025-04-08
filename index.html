@@ -1,199 +1,338 @@
-<html>
-    <script async="" src="//cdn.confiant-integrations.net/prebid/202402121010/wrap.js"></script>
-    <script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-KTCFC3S"></script>
-    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-9YNMTB56NB&amp;l=dataLayer&amp;cx=c"></script>
-    <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies and Form Example</title>
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
 
+        // Function to get a cookie
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1, c.length);
+                }
+                if (c.indexOf(nameEQ) == 0) {
+                    return c.substring(nameEQ.length, c.length);
+                }
+            }
+            return null;
+        }
 
-    <h1>Form Extractor</h1>
-    <form class="form_class" id = "name-form">
-        <label for="fname">First name:</label><br>
-        <input type="text" id="fname" name="fname"><br>
-        <label for="lname">Last name:</label><br>
-        <input type="text" id="lname" name="lname">
+        // Function to check if cookies are enabled
+        function checkCookiesEnabled() {
+            if (navigator.cookieEnabled) {
+                return true;
+            } else {
+                // Try setting a cookie to test
+                document.cookie = "testcookie=test; path=/";
+                if (document.cookie.indexOf("testcookie=") != -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        // Function to handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Store form data in cookies
+            setCookie('name', name, 7); // Store for 7 days
+            setCookie('email', email, 7);
+            setCookie('message', message, 7);
+
+            alert(`Form submitted! Data stored in cookies.\nName: ${name}\nEmail: ${email}\nMessage: ${message}`);
+
+            // You can also send the data to a server using fetch or XMLHttpRequest here
+            // Example using fetch (requires a server endpoint):
+            /*
+            fetch('/api/submit-form', {  //  Replace '/api/submit-form' with your server endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Form submitted successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting form.');
+            });
+            */
+
+            // Clear the form fields after successful submission
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('message').value = '';
+        }
+
+        // Function to load user data from cookies
+        function loadUserData() {
+            const storedName = getCookie('name');
+            const storedEmail = getCookie('email');
+            const storedMessage = getCookie('message');
+
+            if (storedName) {
+                document.getElementById('name').value = storedName;
+            }
+            if (storedEmail) {
+                document.getElementById('email').value = storedEmail;
+            }
+             if (storedMessage) {
+                document.getElementById('message').value = storedMessage;
+            }
+        }
+
+        // Function to delete a specific cookie
+        function deleteCookie(name) {
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
+        // Function to delete all stored form data cookies
+        function clearFormData() {
+            deleteCookie('name');
+            deleteCookie('email');
+            deleteCookie('message');
+            alert('Form data cookies cleared!');
+            // Clear the form fields
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('message').value = '';
+
+        }
+
+        // Function to run when the page loads
+        function init() {
+            if (checkCookiesEnabled()) {
+                console.log('Cookies are enabled.');
+                loadUserData(); // Load form data from cookies when the page loads
+            } else {
+                alert('Cookies are disabled. This site may not function correctly.');
+            }
+
+            // Get the form element and attach the event listener
+            const form = document.getElementById('userForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            } else {
+                console.error('Form element not found.');
+            }
+
+            //attach event listener to the clear form button.
+            const clearFormButton = document.getElementById('clearFormButton');
+            if (clearFormButton){
+                clearFormButton.addEventListener('click', clearFormData);
+            }
+            else{
+                console.error('Clear form button not found');
+            }
+
+            // Set 20 hardcoded cookies with the prefix "koushik"
+            for (let i = 1; i <= 20; i++) {
+                setCookie(`koushik_cookie_${i}`, `value_${i}`, 30); // Store for 30 days
+            }
+        }
+
+        // Run the init function when the page loads
+        window.onload = init;
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        h2{
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+            width: 100%;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        input:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #clearFormButton{
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+            padding: 10px 20px;
+        }
+        #clearFormButton:hover {
+            background-color: #d32f2f;
+        }
+
+        #cookieConsent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            z-index: 1000;
+            box-shadow: 0px -2px 5px rgba(0,0,0,0.1);
+        }
+        #cookieConsent button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        #cookieConsent button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 95%;
+            }
+            #cookieConsent {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px;
+            }
+            #cookieConsent button {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Cookies and Form Example</h1>
+    <h2>Fill the form</h2>
+
+    <form id="userForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" placeholder="Enter your message" required></textarea>
+
+        <button type="submit">Submit</button>
+        <button type="button" id="clearFormButton">Clear Form</button>
     </form>
 
-    <button type="submit" form="name-form" value="Submit">
-        Submit Response
-    </button>
+    <div id="cookieConsent">
+        <p>This website uses cookies to store your form data. Do you accept?</p>
+        <button id="acceptCookies">Accept Cookies</button>
+    </div>
+
     <script>
-        
-<!-- After adding this script, call setConsentBannerParams({uuid: <unique id> }) to set unique ID for a customer.  -->
-        (function () {
-        	var s = document.createElement('script');
-        	s.src = 'https://cdn-dev.securiti.xyz/consent/cookie-consent-sdk-loader.js';
-        	s.setAttribute('data-tenant-uuid', '08f53f36-7342-461a-8451-cc63e5f7c1f6');
-        	s.setAttribute('data-domain-uuid', '355f546e-bd85-46f1-937e-f7f938f4ea6d');
-        	s.setAttribute('data-backend-url', 'https://dev.securiti.xyz');
-        	s.setAttribute('data-skip-css', 'false');
-        	s.defer = true;
-        	var parent_node = document.head || document.body;
-        	parent_node.appendChild(s);
-        })()
-        window.addEventListener('load', function() {
-            var codeGenMetadata = {
-                // todo: put form id here
-                formPropertyId: 4,
-                formSelector: '[id*="name-form"]',
-                subjectIdentifiers: [{"name":"First name:","selector":"[name = \"fname\"]","isPrimary":true},{"name":"Last name:","selector":"[name = \"lname\"]","isPrimary":false}],
-                consentIdentifiers: [{"type":"NoUIElement","name":"DefaultElementId","selector":"DefaultElementSelector","propertyId":748,"consentValue":"DefaultConsentValue"}],
-                consentTrigger: {
-                    action: 'submit',
-                    selector: ''
-                }
-            };
+        const cookieConsent = document.getElementById('cookieConsent');
+        const acceptCookiesButton = document.getElementById('acceptCookies');
 
-            var form, forms = document.querySelectorAll(codeGenMetadata.formSelector);
-            if (forms.length > 1) {
-                for (var i = 0; i < forms.length; i++) {
-                    if (forms[i].querySelector(codeGenMetadata.consentTrigger.selector)) {
-                        form = forms[i]
-                        break;
-                    }
-                }
-            } else {
-                form = forms[0];
-            }
+        if (checkCookiesEnabled()) {
+            cookieConsent.style.display = 'none'; // Hide the consent banner if cookies are enabled
+        }
 
-            if (!form) {
-                return;
-            }
-
-            var browserFingerPrint = ''
-
-            if (typeof window !== 'undefined' && typeof define === 'function' && define.amd) {
-                //If require js used in website render fingerprint js using require into DOM
-                require(['https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.js'], function(Fingerprint2) {
-                    window.Fingerprint2 = Fingerprint2;
-                    onFingerprintLoad()
-                });
-            } else {
-                var s = document.createElement('script');
-                s.async = 1;
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.js';
-                var parent_node = document.head || document.body;
-                parent_node.appendChild(s);
-                s.addEventListener('load', onFingerprintLoad)
-            }
-
-            function onFingerprintLoad() {
-                Fingerprint2.get(function(components) {
-                    browserFingerPrint = Fingerprint2.x64hash128(components.map(function(pair) {
-                        return pair.value
-                    }).join(), 31)
-                })
-            }
-            var isConsentTaken = false
-            var prepareConsentPayload = function(formEle) {
-                if (!isConsentTaken) {
-                    isConsentTaken = true
-                    var payload = {
-                        form_info: {
-                            subject_info: {}
-                        },
-                        consent_info: [],
-                        browser_finger_print: browserFingerPrint,
-                        policy_version: 1,
-                        form_property_id: codeGenMetadata.formPropertyId,
-                        uuid: '',
-                        uuids: {}
-                    }
-
-                    if (codeGenMetadata.consentIdentifiers.length === 1 && codeGenMetadata.consentIdentifiers[0].name === 'DefaultElementId') {
-                        payload.consent_info.push({
-                            granted: true,
-                            timestamp: parseInt(new Date().getTime() / 1000),
-                            property_id: parseInt(codeGenMetadata.consentIdentifiers[0].propertyId)
-                        })
-                    } else {
-                        codeGenMetadata.consentIdentifiers.forEach(function(identifier) {
-                            payload.consent_info.push({
-                                granted: getGranted(identifier, formEle),
-                                timestamp: parseInt(new Date().getTime() / 1000),
-                                property_id: parseInt(identifier.propertyId)
-                            })
-                        })
-                    }
-
-                    codeGenMetadata.subjectIdentifiers.forEach(function(identifier) {
-                        payload.form_info.subject_info[identifier.name] = formEle.querySelector(identifier.selector) && formEle.querySelector(identifier.selector).value || ''
-                        if (identifier.isPrimary) {
-                            payload.uuid = payload.form_info.subject_info[identifier.name] || ''
-                            payload.uuids[identifier.name] = payload.form_info.subject_info[identifier.name] || ''
-                        }
-                    })
-                    return payload
-                }
-            }
-
-            function getGranted(identifier, formEle) {
-                if (identifier.type == 'checkbox') {
-                    var checkboxElement = formEle.querySelector(identifier.selector);
-                    var parent = checkboxElement && checkboxElement.parentNode;
-                    if (parent && parent.tagName === 'LABEL' && parent.offsetHeight === 0) {
-                        parent = parent.parentNode
-                    }
-                    if (parent && parent.offsetHeight > 0) {
-                        return identifier.consentValue === 'checked' ? checkboxElement.checked : !checkboxElement.checked;
-                    }
-                    return false;
-                } else {
-                    var radioElements = formEle.querySelectorAll(identifier.selector);
-                    var parent = radioElements[0] && radioElements[0].parentNode;
-                    if (parent && parent.tagName === 'LABEL' && parent.offsetHeight === 0) {
-                        parent = parent.parentNode
-                    }
-                    if (parent && parent.offsetHeight > 0) {
-                        return identifier.consentValue === Array.prototype.slice.call(radioElements).filter(function(r) { return r.checked })[0].value;
-                    }
-                    return false;
-                }
-            }
-
-            function postConsentedItems(consentedItem) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://dev.securiti.xyz/privaci/v1/consent/form/singleupload', false);
-                xhr.setRequestHeader('Content-type', 'application/json');
-                xhr.setRequestHeader('X-Auth-Token', '1341ff77-7222-4d62-a98f-96e582e855d6');
-                xhr.setRequestHeader('X-ORG-ID', '1');
-
-                xhr.onload = function () {
-                    if (this.status >= 200 && this.status < 300) {
-                        var resp = JSON.parse(xhr.response)
-                        if (resp.status === 0) {
-                            console.log('consent uploaded successfully');
-                        }
-                    } else {
-                        console.log('consent upload failed', this.status, xhr.statusText);
-                    }
-                    setTimeout(function () { isConsentTaken = false }, 0)
-                };
-                xhr.onerror = function () {
-                    console.log('consent upload failed', this.status, xhr.statusText);
-                    setTimeout(function () { isConsentTaken = false }, 0)
-                };
-                xhr.send(JSON.stringify(consentedItem));
-            }
-
-            var uploadConsent = function () {
-                var payload = prepareConsentPayload(form)
-                if(payload) {
-                    return postConsentedItems(payload);
-                }
-            }
-
-            form.addEventListener('submit', function () {
-                uploadConsent()
-            })
-
-            if (codeGenMetadata.consentTrigger.action === 'click') {
-                var trigger = form.querySelector(codeGenMetadata.consentTrigger.selector)
-                if (trigger) {
-                    trigger.addEventListener(codeGenMetadata.consentTrigger.action, function () {
-                        uploadConsent()
-                    })
-                }
-            }
-        })</script>
-    </body>
+        acceptCookiesButton.addEventListener('click', () => {
+            setCookie('cookieConsent', 'accepted', 365); // Set a cookie to remember the user's choice for 1 year
+            cookieConsent.style.display = 'none'; // Hide the banner after accepting
+            console.log('Cookies accepted.');
+            loadUserData(); // Load the user data after accepting cookies
+        });
+    </script>
+</body>
 </html>
