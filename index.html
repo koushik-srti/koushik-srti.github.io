@@ -319,6 +319,19 @@
         <button id="acceptCookies">Accept Cookies</button>
     </div>
 
+    
+                                <script src='https://cdn-qa.securiti.xyz/consent/form-consent-sdk.js'></script>
+                                <script>window.addEventListener('load', function() {
+    FormConsentSDK.initialize({
+        codeGenMetadata:{"formPropertyId":"74","formSelector":"[id*=\"userForm\"]","subjectIdentifiers":[{"name":"Name","selector":"[name = \"name\"]","isPrimary":false},{"name":"Email","selector":"[name = \"email\"]","isPrimary":true}],"consentIdentifiers":[{"type":"checkbox","name":"test","selector":"test","propertyId":333829,"consentValue":"checked"}],"consentTrigger":{"action":"submit","selector":""}},
+        url: 'https://qa.securiti.xyz/privaci/v1/',
+        authToken:'600ed8c7-3ff2-4a6d-8deb-e516f3910d99',
+        orgId:'1',
+        onConsentSuccess: null,
+        onConsentFailure: null
+    })
+})</script>
+
     <script>
         const cookieConsent = document.getElementById('cookieConsent');
         const acceptCookiesButton = document.getElementById('acceptCookies');
